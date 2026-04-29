@@ -1,0 +1,4 @@
+.obsidian/workspace.json
+.obsidian/plugins/copilot/data.json
+# 如果还有其他插件有 key，建议直接忽略整个插件配置目录
+.obsidian/plugins/*/data.json

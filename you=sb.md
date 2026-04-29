@@ -1,0 +1,1 @@
+$$\int^\text{death}_\text{birth}\text{ you }dt = sb$$
