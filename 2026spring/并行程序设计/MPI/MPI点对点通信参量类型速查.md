@@ -44,10 +44,9 @@
 
 - **发送 (Send)**:
     `{c++}MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm)`
-    
+
 - **接收 (Recv)**:
     `{c++}MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)`
-    
 
 |**区域**|**参数名**|**类型与说明**|**代码示例**|
 |---|---|---|---|
@@ -65,10 +64,9 @@
 
 - **发送 (Isend)**:
     `{c++}MPI_Isend(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm, MPI_Request *request)`
-    
+
 - **接收 (Irecv)**:
     `{c++}MPI_Irecv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Request *request)`
-    
 
 ---
 

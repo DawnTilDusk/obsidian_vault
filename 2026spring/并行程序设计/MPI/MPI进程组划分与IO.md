@@ -24,9 +24,9 @@
 #### 1. 通信器的分裂 (Comm Split)
 
 - **指令**：`MPI_Comm_split`
-    
+
 - **应用场景**：把 `MPI_COMM_WORLD` 按照某种规则（如奇偶数、或者所在计算节点）切分成几个互不干扰的平行宇宙（子通信域）。
-    
+
 - **分组逻辑**：
     
     - `color`：颜色相同的进程会被分到同一个新通信器中。
@@ -34,18 +34,15 @@
     - `key`：决定新通信器中的排序（新 `rank`）。`key` 越小，新 `rank` 越靠前。如果 `key` 相同，则按原 `rank` 排序。
         
 - **代码示例 (按奇偶分离)**：
-    
-    C++
-    
-    ```
+
+```cpp
     int color = rank % 2; // 0 为偶数队，1 为奇数队
     int key = rank / 2;   // 决定在队伍里的排号
     MPI_Comm NEW_COMM;
     MPI_Comm_split(MPI_COMM_WORLD, color, key, &NEW_COMM);
     // 现在 NEW_COMM 里，偶数队和奇数队互不干扰地通信
     MPI_Comm_free(&NEW_COMM); // 用完务必释放！
-    ```
-    
+```
 
 #### 2. 进程组的高阶操作 (Group Operations)
 
@@ -59,9 +56,7 @@
     
 - **代码示例 (抽调精英建新群)**：
     
-    C++
-    
-    ```
+```cpp
     MPI_Group world_group, elite_group;
     MPI_Comm ELITE_COMM;
     MPI_Comm_group(MPI_COMM_WORLD, &world_group); // 获取全员大群名单
@@ -76,8 +71,7 @@
         // 只有 0, 2, 4 号进程会进这里聊天
     }
     MPI_Group_free(&elite_group);
-    ```
-    
+```
 
 #### 3. 并行文件 I/O (Parallel I/O)
 
@@ -89,7 +83,7 @@
     
     C++
     
-    ```
+```cpp
     MPI_File fh;
     // 所有人一起打开文件
     MPI_File_open(MPI_COMM_WORLD, "data.bin", MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
@@ -101,8 +95,7 @@
     // 按偏移量并发写入，绝对不会覆盖别人
     MPI_File_write_at_all(fh, offset, &my_data, 1, MPI_INT, MPI_STATUS_IGNORE);
     MPI_File_close(&fh);
-    ```
-    
+```
 
 ---
 
@@ -126,7 +119,7 @@
 ### 💡 极速排雷指南 (针对作业与考试)：
 
 1. **死锁灾难**：在条件判断（如 `if (rank == 0)`）里面调用 `MPI_Comm_split`、`MPI_Comm_create` 或 `MPI_Barrier`。记住：**集体操作必须集体到场**！
-    
+
 2. **指针满天飞**：所有创建和释放操作（创建新通信器、新组、打开文件），以及状态返回（status），最后那个参数**一定要加 `&` 取地址**，因为 MPI 需要把生成的内部句柄通过指针写回给你。
-    
+
 3. **计算 Offset**：在文件读写时，不要忘了乘以 `sizeof(datatype)`！`offset = rank` 是错的，应该是 `offset = rank * sizeof(你要写的数据类型)`，因为偏移量是以字节 (bytes)为单位的。
